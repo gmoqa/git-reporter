@@ -10,7 +10,7 @@ export default function Navbar() {
           git
         </Text>
         <Text fontSize={['xl', '2xl']} fontWeight={'bold'} color={'gray.200'}>
-          tool
+          reporter
         </Text>
       </HStack>
     </HStack>
