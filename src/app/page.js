@@ -113,7 +113,7 @@ export default function Page() {
         <Text fontSize='xl' color={'gray.400'}>
           Unlock the Power of Your Commit Messages with Conventional Commits
         </Text>
-        <Text color={'yellow.500'} fontSize={'sm'} fontWeight={'medium'}>
+        <Text color={'yellow.400'} fontSize={'sm'} fontWeight={'medium'}>
           You are not using conventional commits?{' '}
           <a
             href='https://www.conventionalcommits.org/en/v1.0.0/'
@@ -158,11 +158,15 @@ export default function Page() {
           width={'100%'}
           bgColor={'yellow.400'}
           color={'gray.700'}
+          _hover={{ bgColor: 'yellow.500', color: 'white' }}
           onClick={() => handleClickRunButton()}
         >
           Process
         </Button>
       </VStack>
+      <Text mt={1} color={'gray.500'} fontSize={'xs'} textAlign={'center'}>
+        We will never store your data. This tool runs 100% on the client side.
+      </Text>
 
       {formattedLog && (
         <Box mt={4} bgColor={'white'} p={4} borderRadius={'md'} mb={20}>
