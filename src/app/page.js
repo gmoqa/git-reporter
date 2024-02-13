@@ -149,11 +149,11 @@ export default function Page() {
 
       {formattedLog && (
         <Box mt={4} bgColor={'white'} p={4} borderRadius={'md'} mb={20}>
-          <Tabs colorScheme='yellow'>
+          <Tabs>
             <TabList>
-              <Tab>Log</Tab>
-              <Tab>Changelog</Tab>
-              <Tab>Stats</Tab>
+              <Tab color={'blue.500'}>Log</Tab>
+              <Tab color={'blue.500'}>Changelog</Tab>
+              <Tab color={'blue.500'}>Stats</Tab>
             </TabList>
             <TabPanels>
               <TabPanel pb={2} px={0}>
@@ -218,7 +218,9 @@ export default function Page() {
                                 </HStack>
                               </Td>
                               <Td isNumeric>
-                                {dayjs(line.date).format('DD-MM-YYYY')}
+                                <Text color={'gray.600'} fontWeight={'medium'}>
+                                  {dayjs(line.date).format('DD-MM-YYYY')}
+                                </Text>
                               </Td>
                             </Tr>
                           )
