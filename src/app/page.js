@@ -323,10 +323,13 @@ export default function Page() {
                       boxShadow='sm'
                     >
                       <Stack>
-                        <Text textStyle='sm' color='fg.muted'>
+                        <Text textStyle='sm' color='gray.800'>
                           {label}
                         </Text>
-                        <Heading size={{ base: 'sm', md: 'md' }}>
+                        <Heading
+                          size={{ base: 'sm', md: 'md' }}
+                          color='gray.800'
+                        >
                           {value}
                         </Heading>
                       </Stack>
