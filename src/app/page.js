@@ -108,25 +108,42 @@ export default function Page() {
       py={2}
       bgColor={'gray.700'}
     >
+      <VStack mt={4} spacing={0}>
+        <Heading as={'h1'}>Gain Insights from Your Git History</Heading>
+        <Text fontSize='xl' color={'gray.400'}>
+          Unlock the Power of Your Commit Messages with Conventional Commits
+        </Text>
+        <Text color={'yellow.500'} fontSize={'sm'} fontWeight={'medium'}>
+          You are not using conventional commits?{' '}
+          <a
+            href='https://www.conventionalcommits.org/en/v1.0.0/'
+            target='_blank'
+          >
+            Check this
+          </a>
+        </Text>
+      </VStack>
       <VStack pt={6} spacing={4}>
         <VStack spacing={0}>
-          <HStack>
-            <Text as='samp' color={'gray.400'} fontSize={['xs', 'sm']}>
-              {COMMAND}
-            </Text>
-            <IconButton
-              size={'sm'}
-              borderRadius={'full'}
-              _hover={{ bgColor: 'gray.700' }}
-              color={'gray.500'}
-              bgColor={'gray.800'}
-              icon={<CopyIcon />}
-              onClick={() => onCopy()}
-            >
-              {hasCopied ? 'URL copied!' : 'Copy URL'}
-            </IconButton>
-          </HStack>
-          <Text as='i' color={'gray.500'} fontSize={['xs', 'sm']}>
+          <Box p={4} bgColor={'gray.900'} borderRadius={'lg'}>
+            <HStack>
+              <Text as='samp' color={'gray.300'} fontSize={['xs', 'sm']}>
+                {COMMAND}
+              </Text>
+              <IconButton
+                size={'sm'}
+                borderRadius={'full'}
+                _hover={{ bgColor: 'gray.700' }}
+                color={'gray.500'}
+                bgColor={'gray.800'}
+                icon={<CopyIcon />}
+                onClick={() => onCopy()}
+              >
+                {hasCopied ? 'URL copied!' : 'Copy URL'}
+              </IconButton>
+            </HStack>
+          </Box>
+          <Text mt={2} as='i' color={'gray.400'} fontSize={['xs', 'sm']}>
             Run this command on your proyect folder, and paste the output here
           </Text>
         </VStack>
@@ -143,7 +160,7 @@ export default function Page() {
           color={'gray.700'}
           onClick={() => handleClickRunButton()}
         >
-          Run
+          Process
         </Button>
       </VStack>
 
