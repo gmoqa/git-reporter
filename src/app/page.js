@@ -109,9 +109,9 @@ export default function Page() {
       bgColor={'gray.700'}
     >
       <VStack mt={4} spacing={0}>
-        <Heading as={'h1'}>Gain Insights from Your Git History</Heading>
+        <Heading as={'h1'}>Gain insights from your Git history</Heading>
         <Text fontSize='xl' color={'gray.400'}>
-          Unlock the Power of Your Commit Messages with Conventional Commits
+          Unlock the power of your commit messages with Conventional Commits
         </Text>
         <Text color={'yellow.400'} fontSize={'sm'} fontWeight={'medium'}>
           You are not using conventional commits?{' '}
