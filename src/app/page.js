@@ -39,7 +39,6 @@ export default function Page() {
   const { onCopy, hasCopied } = useClipboard(String(COMMAND))
   const [log, setLog] = useState(null)
   const [formattedLog, setFormattedLog] = useState(null)
-  const [features, setFeatures] = useState(null)
 
   const handleClickRunButton = () => {
     const scopePattern = /\((.*?)\):/
@@ -109,7 +108,9 @@ export default function Page() {
       bgColor={'gray.700'}
     >
       <VStack mt={4} spacing={0}>
-        <Heading as={'h1'}>Gain insights from your Git history</Heading>
+        <Heading as={'h1'} color={'white'}>
+          Gain insights from your GIT history
+        </Heading>
         <Text fontSize='xl' color={'gray.400'}>
           Unlock the power of your commit messages with Conventional Commits
         </Text>
