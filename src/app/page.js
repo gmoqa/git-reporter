@@ -35,7 +35,7 @@ import dayjs from 'dayjs'
 
 export default function Page() {
   const COMMAND =
-    ' git --no-pager log --all --oneline --pretty=format:"%h %an %ad %s" --date=format-local:"%Y-%m-%d"'
+    'git --no-pager log --all --oneline --pretty=format:"%h %an %ad %s" --date=format-local:"%Y-%m-%d %H:%M:%S"'
   const { onCopy, hasCopied } = useClipboard(String(COMMAND))
   const [log, setLog] = useState(null)
   const [formattedLog, setFormattedLog] = useState(null)
