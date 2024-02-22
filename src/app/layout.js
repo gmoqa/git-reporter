@@ -1,8 +1,11 @@
+'use client'
+
 import { ChakraProvider, ColorModeScript, Flex } from '@chakra-ui/react'
+import { GoogleTagManager } from '@next/third-parties/google'
 
 import Navbar from '@/app/components/Navbar'
 
-export default async function RootLayout({ children }) {
+export default function RootLayout({ children }) {
   return (
     <html>
       <body>
@@ -14,6 +17,7 @@ export default async function RootLayout({ children }) {
           </Flex>
         </ChakraProvider>
       </body>
+      <GoogleTagManager gtmId='GTM-MR2PG3HB' />
     </html>
   )
 }
