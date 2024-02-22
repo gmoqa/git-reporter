@@ -44,22 +44,23 @@ export default function Page() {
   const source = `## Changelog
   ### Summary
   **${returnBaseFilteredLog().length}** commits, **${returnBaseFilteredLog().filter((line) => line.type === 'feat').length}** features, **${returnBaseFilteredLog().filter((line) => line.type === 'fix').length}** fixes
-  
+    
+   
   #### Features
   
   ${returnBaseFilteredLog()
     .filter((line) => line.type === 'feat')
     .map((line) => {
-      return ` - **${line.type}**(${line.scope}): ${line.subject} **[(${line.hash})](#)**  \n`
+      return ` - **${line.type}** (${line.scope}): ${line.subject} **[(${line.hash})](#)**  \n`
     })
     .join('')}
-    
+
   #### Fixes
   
   ${returnBaseFilteredLog()
     .filter((line) => line.type === 'fix')
     .map((line) => {
-      return ` - **[${line.hash}](#)** **${line.type}**(${line.scope}): ${line.subject}  \n`
+      return ` - **${line.type}** (${line.scope}): ${line.subject} **[(${line.hash})](#)**  \n`
     })
     .join('')}
 `
