@@ -200,48 +200,6 @@ export default function Page() {
         We will never store your data. This tool runs 100% on the client side.
       </Text>
 
-      <Box
-        mt={1}
-        bgColor={'gray.600'}
-        py={2}
-        px={4}
-        borderRadius={'lg'}
-        color={'gray.300'}
-      >
-        <HStack mt={1}>
-          <RadioGroup
-            onChange={setDateFilter}
-            value={dateFilter}
-            colorScheme={'yellow'}
-          >
-            <Stack direction='row'>
-              <Radio value='LAST_WEEK'>Last Week</Radio>
-              <Radio value='LAST_2_WEEKS'>Last 2 Weeks</Radio>
-              <Radio value='LAST_MONTH'>Last Month</Radio>
-              <Radio value='CUSTOM'>Custom</Radio>
-            </Stack>
-          </RadioGroup>
-          <Spacer />
-          <Button
-            size={'sm'}
-            bgColor={'yellow.400'}
-            color={'gray.700'}
-            _hover={{ bgColor: 'yellow.300', color: 'gray.700' }}
-            onClick={() => handleClickFilterButton()}
-          >
-            Filter
-          </Button>
-          <Button
-            size={'sm'}
-            color={'gray.700'}
-            _hover={{ bgColor: 'yellow.300', color: 'gray.700' }}
-            onClick={() => handleClickFilterButton()}
-          >
-            Remove filter
-          </Button>
-        </HStack>
-      </Box>
-
       {formattedLog.length > 0 && (
         <Box
           data-color-mode='light'
