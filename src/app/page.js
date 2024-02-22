@@ -6,11 +6,6 @@ import {
   Flex,
   Heading,
   HStack,
-  IconButton,
-  Radio,
-  RadioGroup,
-  Spacer,
-  Stack,
   Text,
   Textarea,
   useClipboard,
@@ -20,7 +15,7 @@ import { CopyIcon } from '@chakra-ui/icons'
 import { useState } from 'react'
 import ErrorAlert from '@/app/components/alerts/ErrorAlert'
 import MarkdownPreview from '@uiw/react-markdown-preview'
-import Head from 'next/head'
+import { sendGTMEvent } from '@next/third-parties/google'
 
 export default function Page() {
   const COMMAND =
@@ -92,13 +87,8 @@ export default function Page() {
     })
   }
 
-  const handleClickFilterButton = () => {
-    setFormattedLog((prev) => {
-      prev.filter((line) => line.type === 'styles')
-    })
-  }
-
   const handleClickRunButton = () => {
+    sendGTMEvent({ event: 'buttonClicked', value: 'click' })
     setLoading(true)
     processLog()
       .then(() => setLoading(false))
