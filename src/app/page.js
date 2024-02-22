@@ -125,7 +125,6 @@ export default function Page() {
       bgColor={'gray.700'}
     >
       <VStack mt={4} spacing={0}>
-        {console.log()}
         <Heading as={'h1'} color={'white'}>
           Gain insights from your GIT history
         </Heading>
@@ -198,7 +197,7 @@ export default function Page() {
       {formattedLog.length > 0 && (
         <Box
           data-color-mode='light'
-          mt={4}
+          mt={1}
           bgColor={'white'}
           p={4}
           borderRadius={'md'}
