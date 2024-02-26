@@ -1,6 +1,6 @@
 'use client'
 
-import { Button, HStack, Input } from '@chakra-ui/react'
+import { Button, HStack, Input, Spacer } from '@chakra-ui/react'
 import { SearchIcon } from '@chakra-ui/icons'
 
 export default function Toolbar({ setInitialDate, setEndDate, onFilter }) {
@@ -40,19 +40,18 @@ export default function Toolbar({ setInitialDate, setEndDate, onFilter }) {
           color='gray.400'
         />
       </HStack>
-      <HStack>
-        <Button
-          size={'md'}
-          borderRadius={'md'}
-          _hover={{ bgColor: 'gray.700' }}
-          color={'gray.300'}
-          bgColor={'gray.800'}
-          leftIcon={<SearchIcon />}
-          onClick={onFilter}
-        >
-          Filter
-        </Button>
-      </HStack>
+      <Spacer />
+      <Button
+        size={'sm'}
+        borderRadius={'md'}
+        bgColor={'yellow.400'}
+        color={'gray.700'}
+        _hover={{ bgColor: 'yellow.200', color: 'gray.700' }}
+        leftIcon={<SearchIcon />}
+        onClick={onFilter}
+      >
+        Filter
+      </Button>
     </HStack>
   )
 }
