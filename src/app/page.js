@@ -16,15 +16,17 @@ import { useState } from 'react'
 import ErrorAlert from '@/app/components/alerts/ErrorAlert'
 import MarkdownPreview from '@uiw/react-markdown-preview'
 import { sendGTMEvent } from '@next/third-parties/google'
+import Toolbar from '@/app/components/Toolbar'
 
 export default function Page() {
   const COMMAND =
     'git --no-pager log --all --oneline --pretty=format:"%h %an %ad %s" --date=format-local:"%Y-%m-%d %H:%M:%S"'
   const { onCopy, hasCopied } = useClipboard(String(COMMAND))
   const [log, setLog] = useState('')
-  const [dateFilter, setDateFilter] = useState('LAST_WEEK')
   const [formattedLog, setFormattedLog] = useState([])
   const [loading, setLoading] = useState(false)
+  const [initialDate, setInitialDate] = useState()
+  const [endDate, setEndDate] = useState()
 
   function returnBaseFilteredLog() {
     return formattedLog
@@ -81,14 +83,30 @@ export default function Page() {
             const subject = text.split(': ')?.[1]
             return { hash, author, scope, type, date, subject, text }
           })
+          .filter((log) => {
+            if (!log.date) return false
+
+            let passInitialDate = true
+            let passEndDate = true
+            const logDate = new Date(log.date).toISOString().split('T')[0]
+
+            if (initialDate) {
+              passInitialDate = logDate >= initialDate
+            }
+
+            if (endDate) {
+              passEndDate = logDate <= endDate
+            }
+
+            return passInitialDate && passEndDate
+          })
         setFormattedLog(processedLog)
         resolve()
       }, 1000)
     })
   }
 
-  const handleClickRunButton = () => {
-    sendGTMEvent({ event: 'buttonClicked', value: 'click' })
+  const handleProcessLoad = () => {
     setLoading(true)
     processLog()
       .then(() => setLoading(false))
@@ -100,6 +118,11 @@ export default function Page() {
           description: 'An error occurred while processing the log',
         })
       })
+  }
+
+  const handleClickRunButton = () => {
+    sendGTMEvent({ event: 'buttonClicked', value: 'click' })
+    handleProcessLoad()
   }
 
   function truncateString(string) {
@@ -193,26 +216,41 @@ export default function Page() {
         </Text>
 
         {formattedLog.length > 0 && (
-          <Box
-            data-color-mode='light'
-            mt={4}
-            bgColor={'white'}
-            p={4}
-            borderRadius={'md'}
-          >
-            <MarkdownPreview
-              source={source}
-              rehypeRewrite={(node, index, parent) => {
-                if (
-                  node.tagName === 'a' &&
-                  parent &&
-                  /^h(1|2|3|4|5|6)/.test(parent.tagName)
-                ) {
-                  parent.children = parent.children.slice(1)
-                }
-              }}
-            />
-          </Box>
+          <>
+            <Box
+              data-color-mode='light'
+              mt={4}
+              bgColor={'gray.900'}
+              p={4}
+              borderRadius={'md'}
+            >
+              <Toolbar
+                setInitialDate={setInitialDate}
+                setEndDate={setEndDate}
+                onFilter={handleProcessLoad}
+              />
+            </Box>
+            <Box
+              data-color-mode='light'
+              mt={4}
+              bgColor={'white'}
+              p={4}
+              borderRadius={'md'}
+            >
+              <MarkdownPreview
+                source={source}
+                rehypeRewrite={(node, index, parent) => {
+                  if (
+                    node.tagName === 'a' &&
+                    parent &&
+                    /^h(1|2|3|4|5|6)/.test(parent.tagName)
+                  ) {
+                    parent.children = parent.children.slice(1)
+                  }
+                }}
+              />
+            </Box>
+          </>
         )}
       </Flex>
     </>
