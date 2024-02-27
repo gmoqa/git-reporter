@@ -10,8 +10,9 @@ import {
   Spacer,
   Stack,
 } from '@chakra-ui/react'
-import { SearchIcon } from '@chakra-ui/icons'
+import { CalendarIcon, SearchIcon } from '@chakra-ui/icons'
 import { useState } from 'react'
+import { FaFilter } from 'react-icons/fa'
 
 export default function Toolbar({ setInitialDate, setEndDate, onFilter }) {
   const [filter, setFilter] = useState('WEEK')
@@ -38,12 +39,15 @@ export default function Toolbar({ setInitialDate, setEndDate, onFilter }) {
   }
 
   return (
-    <Box bgColor={'gray.800'} py={2} px={4} borderRadius={'lg'} mt={2}>
+    <Box bgColor={'gray.600'} py={2} px={4} borderRadius={'lg'} mt={2}>
       <HStack>
+        <CalendarIcon color={'gray.400'} mr={2} />
         <RadioGroup
+          mt={1}
           onChange={updateFilter}
           value={filter}
-          color={'gray.500'}
+          color={'gray.300'}
+          fontWeight={'medium'}
           colorScheme={'yellow'}
         >
           <Stack direction='row'>
@@ -84,7 +88,7 @@ export default function Toolbar({ setInitialDate, setEndDate, onFilter }) {
           bgColor={'yellow.400'}
           color={'gray.700'}
           _hover={{ bgColor: 'yellow.200', color: 'gray.700' }}
-          leftIcon={<SearchIcon />}
+          leftIcon={<FaFilter />}
           onClick={onFilter}
         >
           Filter
