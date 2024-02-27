@@ -17,8 +17,7 @@ import { FaFilter } from 'react-icons/fa'
 export default function Toolbar({ setInitialDate, setEndDate, onFilter }) {
   const [filter, setFilter] = useState('WEEK')
 
-  const updateFilter = (e) => {
-    const value = e.target.value
+  const updateFilter = (value) => {
     setFilter(value)
   }
 
