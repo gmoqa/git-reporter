@@ -13,6 +13,7 @@ import {
 } from '@chakra-ui/react'
 import { CopyIcon } from '@chakra-ui/icons'
 import { useState } from 'react'
+import { useReCaptcha } from 'next-recaptcha-v3'
 import ErrorAlert from '@/app/components/alerts/ErrorAlert'
 import MarkdownPreview from '@uiw/react-markdown-preview'
 import { sendGTMEvent } from '@next/third-parties/google'
@@ -27,6 +28,7 @@ export default function Page() {
   const [loading, setLoading] = useState(false)
   const [initialDate, setInitialDate] = useState()
   const [endDate, setEndDate] = useState()
+  const { executeRecaptcha } = useReCaptcha()
 
   function returnBaseFilteredLog() {
     return formattedLog
@@ -120,9 +122,31 @@ export default function Page() {
       })
   }
 
-  const handleClickRunButton = () => {
-    sendGTMEvent({ event: 'buttonClicked', value: 'click' })
-    handleProcessLoad()
+  const isValidRecaptcha = async () => {
+    const token = await executeRecaptcha('validate')
+    const response = await fetch('/api/validate', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        captchaToken: token,
+      }),
+    })
+
+    return response?.status === 200
+  }
+
+  const handleClickRunButton = async () => {
+    try {
+      const isRealUser = await isValidRecaptcha()
+      if (isRealUser) {
+        sendGTMEvent({ event: 'buttonClicked', value: 'click' })
+        handleProcessLoad()
+      }
+    } catch (error) {
+      console.log(error)
+    }
   }
 
   function truncateString(string) {
