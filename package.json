@@ -16,8 +16,6 @@
     "@chakra-ui/react": "^2.8.2",
     "@emotion/react": "^11.11.3",
     "@emotion/styled": "^11.11.0",
-    "@fontsource/open-sans": "^5.0.22",
-    "@fontsource/raleway": "^5.0.16",
     "@next/third-parties": "^14.1.0",
     "@uiw/react-markdown-preview": "^5.0.7",
     "dayjs": "^1.11.10",

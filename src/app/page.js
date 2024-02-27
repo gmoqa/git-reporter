@@ -51,7 +51,7 @@ export default function Page() {
   ${returnBaseFilteredLog()
     .filter((line) => line.type === 'feat')
     .map((line) => {
-      return ` - **${line.type}** (${line.scope}): ${line.subject} **[(${line.hash})](#)**  \n`
+      return ` - **${line.type}**(${line.scope}): ${line.subject} **[(${line.hash})](#)**  \n`
     })
     .join('')}
 
@@ -60,7 +60,7 @@ export default function Page() {
   ${returnBaseFilteredLog()
     .filter((line) => line.type === 'fix')
     .map((line) => {
-      return ` - **${line.type}** (${line.scope}): ${line.subject} **[(${line.hash})](#)**  \n`
+      return ` - **${line.type}**(${line.scope}): ${line.subject} **[(${line.hash})](#)**  \n`
     })
     .join('')}
 `
