@@ -215,7 +215,7 @@ export default function Page() {
                 </Button>
               </HStack>
             </Box>
-            <Text mt={2} as='i' color={'gray.400'} fontSize={['xs', 'sm']}>
+            <Text mt={2} as='i' color={'gray.300'} fontSize={['xs', 'sm']}>
               Run this command on your proyect folder, and paste the output here
             </Text>
           </VStack>
@@ -243,19 +243,11 @@ export default function Page() {
 
         {formattedLog.length > 0 && (
           <>
-            <Box
-              data-color-mode='light'
-              mt={4}
-              bgColor={'gray.900'}
-              p={4}
-              borderRadius={'md'}
-            >
-              <Toolbar
-                setInitialDate={setInitialDate}
-                setEndDate={setEndDate}
-                onFilter={handleProcessLoad}
-              />
-            </Box>
+            <Toolbar
+              setInitialDate={setInitialDate}
+              setEndDate={setEndDate}
+              onFilter={handleProcessLoad}
+            />
             <Box
               data-color-mode='light'
               mt={4}
