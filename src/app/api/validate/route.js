@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server'
 
 export async function POST(request, response) {
-  const secretKey = process?.env?.NEXT_PUBLIC_BACKEND_RECAPTCHA_API_KEY
+  const secretKey = process?.env?.RECAPTCHA_SECRET_API_KEY
   const { captchaToken } = await request.json()
 
   try {
