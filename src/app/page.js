@@ -18,6 +18,7 @@ import ErrorAlert from '@/app/components/alerts/ErrorAlert'
 import MarkdownPreview from '@uiw/react-markdown-preview'
 import { sendGTMEvent } from '@next/third-parties/google'
 import Toolbar from '@/app/components/Toolbar'
+import { formatDate } from '@/app/utils/date'
 
 export default function Page() {
   const COMMAND =
@@ -90,7 +91,7 @@ export default function Page() {
 
             let passInitialDate = true
             let passEndDate = true
-            const logDate = new Date(log.date).toISOString().split('T')[0]
+            const logDate = formatDate(log.date)
 
             if (initialDate) {
               passInitialDate = logDate >= initialDate
@@ -232,7 +233,7 @@ export default function Page() {
             bgColor={'yellow.400'}
             color={'gray.700'}
             _hover={{ bgColor: 'yellow.200', color: 'gray.700' }}
-            onClick={() => handleClickRunButton()}
+            onClick={handleClickRunButton}
           >
             Process
           </Button>
@@ -246,7 +247,7 @@ export default function Page() {
             <Toolbar
               setInitialDate={setInitialDate}
               setEndDate={setEndDate}
-              onFilter={handleProcessLoad}
+              handleFilterResults={handleClickRunButton}
             />
             <Box
               data-color-mode='light'
