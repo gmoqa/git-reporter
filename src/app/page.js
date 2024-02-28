@@ -123,6 +123,8 @@ export default function Page() {
   }
 
   const isValidRecaptcha = async () => {
+    if (process.env.NODE_ENV === 'development') return true
+
     const token = await executeRecaptcha('validate')
     const response = await fetch('/api/validate', {
       method: 'POST',
