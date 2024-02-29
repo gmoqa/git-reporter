@@ -20,7 +20,7 @@ export default function Toolbar({
   setEndDate,
   handleFilterResults,
 }) {
-  const [filter, setFilter] = useState('WEEK')
+  const [filter, setFilter] = useState(null)
 
   const updateFilter = (newFilter) => {
     const today = new Date()

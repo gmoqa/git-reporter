@@ -38,30 +38,32 @@ export default function Page() {
       ?.filter((line) => !line.text.startsWith('WIP'))
       ?.filter((line) => !line.text.startsWith('index'))
       ?.filter((line) => line.type)
-      ?.filter((line) => line.scope)
       ?.filter((line) => line.subject)
   }
 
+  const filteredLog = returnBaseFilteredLog()
+  const feats = filteredLog.filter((line) => line.type === 'feat')
+  const fixes = filteredLog.filter((line) => line.type === 'fix')
+
   const source = `## Changelog
   ### Summary
-  **${returnBaseFilteredLog().length}** commits, **${returnBaseFilteredLog().filter((line) => line.type === 'feat').length}** features, **${returnBaseFilteredLog().filter((line) => line.type === 'fix').length}** fixes
+  **${filteredLog.length}** commits, **${feats.length}** features, **${fixes.length}** fixes
     
    
-  #### Features
+  ${feats.length > 0 ? '#### Features' : ''}
   
-  ${returnBaseFilteredLog()
-    .filter((line) => line.type === 'feat')
+  ${feats
     .map((line) => {
       return ` - **${line.type}**(${line.scope}): ${line.subject} **[(${line.hash})](#)**  \n`
     })
     .join('')}
 
-  #### Fixes
+  ${fixes.length > 0 ? '#### Fixes' : ''}
   
-  ${returnBaseFilteredLog()
-    .filter((line) => line.type === 'fix')
+  ${fixes
     .map((line) => {
-      return ` - **${line.type}**(${line.scope}): ${line.subject} **[(${line.hash})](#)**  \n`
+      const optionalScope = line.scope ? `(${line.scope})` : ''
+      return ` - **${line.type}**${optionalScope}: ${line.subject} **[(${line.hash})](#)**  \n`
     })
     .join('')}
 `
@@ -70,6 +72,7 @@ export default function Page() {
     return new Promise((resolve) => {
       setTimeout(() => {
         const scopePattern = /\((.*?)\):/
+        const typePattern = /^([^\(:]+)(?:\([^)]*\))?:/
         const dateTimePattern = /\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}/
         const processedLog = log
           .trim()
@@ -82,7 +85,7 @@ export default function Page() {
             const author = line.substring(hash.length + 1, dateIndex - 1)
             const text = line.substring(dateLastIndex + 1)
             const scope = text.match(scopePattern)?.[1]
-            const type = text.substring(0, text.indexOf(scope) - 1)
+            const type = text.match(typePattern)?.[1]
             const subject = text.split(': ')?.[1]
             return { hash, author, scope, type, date, subject, text }
           })
@@ -242,7 +245,7 @@ export default function Page() {
           We will never store your data. This tool runs 100% on the client side.
         </Text>
 
-        {formattedLog.length > 0 && (
+        {(formattedLog.length > 0 || initialDate || endDate) && (
           <>
             <Toolbar
               setInitialDate={setInitialDate}
