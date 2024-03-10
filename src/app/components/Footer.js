@@ -1,24 +1,30 @@
 import { Box, HStack, IconButton, Spacer, Text } from '@chakra-ui/react'
-import { FaGithub, FaLinkedin, FaTwitter } from 'react-icons/fa'
+import { FaEnvelope, FaGithub, FaTwitter } from 'react-icons/fa'
+import Link from 'next/link'
 
 export default function Footer() {
   return (
-    <Box px={8} py={10} bgColor={'gray.900'}>
+    <Box px={8} py={6} bgColor={'gray.900'}>
       <HStack>
-        <Text color={'gray.300'} fontWeight={'medium'}>
-          git reporter © 2024{' '}
+        <Text color={'gray.300'} fontWeight={'semibold'}>
+          gitreporter 2024
+        </Text>
+        <Text color={'gray.400'}>
+           <Link href='https://github.com/gmoqa' isExternal>by Guillermo Quinteros @gmoqa
+        </Link>
         </Text>
         <Spacer />
         <HStack>
-          <IconButton variant={'ghost'} icon={<FaGithub />} />
-          <IconButton variant={'ghost'} icon={<FaLinkedin />} />
-          <IconButton variant={'ghost'} icon={<FaTwitter />} />
+          <Link href='https://github.com/gmoqa/git-reporter' isExternal target={'_blank'}>
+            <IconButton size={'lg'} icon={<FaGithub />} colorScheme={'dark'} />
+          </Link>
+          <Link href='mailto:gu.quinteros@gmail.com' isExternal target={'_blank'}>
+            <IconButton size={'lg'} icon={<FaEnvelope />} colorScheme={'dark'} />
+          </Link>
+          <Link href='https://twitter.com/gitreporter' isExternal target={'_blank'}>
+            <IconButton size={'lg'} icon={<FaTwitter />} colorScheme={'dark'} />
+          </Link>
         </HStack>
-      </HStack>
-      <HStack mt={10}>
-        <Text color={'gray.500'} fontWeight={'medium'}>
-          by fenec #devs , All rigths reserved
-        </Text>
       </HStack>
     </Box>
   )
