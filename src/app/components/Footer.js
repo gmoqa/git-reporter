@@ -14,7 +14,7 @@ export default function Footer() {
         </Link>
         </Text>
         <Spacer />
-        <HStack>
+        <HStack mr={12}>
           <Link href='https://github.com/gmoqa/git-reporter' isExternal target={'_blank'}>
             <IconButton size={'lg'} icon={<FaGithub />} colorScheme={'dark'} />
           </Link>
