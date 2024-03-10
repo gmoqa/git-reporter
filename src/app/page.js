@@ -19,6 +19,7 @@ import MarkdownPreview from '@uiw/react-markdown-preview'
 import { sendGTMEvent } from '@next/third-parties/google'
 import Toolbar from '@/app/components/Toolbar'
 import { formatDate } from '@/app/utils/date'
+import Footer from '@/app/components/Footer'
 
 export default function Page() {
   const COMMAND =
@@ -275,6 +276,7 @@ export default function Page() {
           </>
         )}
       </Flex>
+      <Footer />
     </>
   )
 }

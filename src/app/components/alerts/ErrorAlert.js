@@ -3,9 +3,9 @@ import { createStandaloneToast } from '@chakra-ui/react'
 export default function ErrorAlert({ title, description }) {
   const { toast } = createStandaloneToast()
   return toast({
-    title: title || 'Ha ocurrido un error inesperado',
+    title: title || 'An error occurred',
     description:
-      description || 'Se ha reportado y estamos trabajando para que no ocurra',
+      description || 'An error occurred while processing the log',
     status: 'error',
     duration: 5000,
     width: '100vw',
