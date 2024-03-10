@@ -1,7 +1,6 @@
 'use client'
 
 import { Button, HStack, Spacer, Text } from '@chakra-ui/react'
-import { StarIcon } from '@chakra-ui/icons'
 import { FaGithub } from 'react-icons/fa'
 import Link from 'next/link'
 
@@ -17,7 +16,7 @@ export default function Navbar() {
         </Text>
       </HStack>
       <Spacer />
-      <Link href='https://github.com/gmoqa/' passHref target={'_blank'}>
+      <Link href='https://github.com/gmoqa/git-reporter' passHref target={'_blank'}>
         <Button leftIcon={<FaGithub />} size={'sm'}>
           Star on GitHub
         </Button>
