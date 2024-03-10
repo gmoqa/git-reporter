@@ -16,13 +16,13 @@ export default function Footer() {
         <Spacer />
         <HStack mr={12}>
           <Link href='https://github.com/gmoqa/git-reporter' isExternal target={'_blank'}>
-            <IconButton size={'lg'} icon={<FaGithub />} colorScheme={'dark'} />
+            <IconButton size={'lg'} icon={<FaGithub />} colorScheme={'dark'} color={'gray.300'} />
           </Link>
           <Link href='mailto:gu.quinteros@gmail.com' isExternal target={'_blank'}>
-            <IconButton size={'lg'} icon={<FaEnvelope />} colorScheme={'dark'} />
+            <IconButton size={'lg'} icon={<FaEnvelope />} colorScheme={'dark'} color={'gray.300'} />
           </Link>
           <Link href='https://twitter.com/gitreporter' isExternal target={'_blank'}>
-            <IconButton size={'lg'} icon={<FaTwitter />} colorScheme={'dark'} />
+            <IconButton size={'lg'} icon={<FaTwitter />} colorScheme={'dark'} color={'gray.300'} />
           </Link>
         </HStack>
       </HStack>
