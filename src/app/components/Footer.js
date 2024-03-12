@@ -4,14 +4,14 @@ import Link from 'next/link'
 
 export default function Footer() {
   return (
-    <Box px={8} py={6} bgColor={'gray.900'}>
+    <Box px={8} py={2} bgColor={'gray.900'}>
       <HStack>
-        <Text color={'gray.300'} fontWeight={'semibold'}>
-          gitreporter 2024
-        </Text>
-        <Text color={'gray.400'}>
-           <Link href='https://github.com/gmoqa' isExternal>by Guillermo Quinteros @gmoqa
-        </Link>
+        <Text color={'gray.500'}>
+          GitReporter is licensed under the MIT License anb developed by {' '}
+          <Link href='https://github.com/gmoqa' isExternal>
+            Guillermo Quinteros
+          </Link>
+          {' '} and GitHub contributors.
         </Text>
         <Spacer />
         <HStack mr={12}>
