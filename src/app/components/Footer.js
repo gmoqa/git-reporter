@@ -7,12 +7,7 @@ export default function Footer() {
     <Box px={8} py={2} bgColor={'gray.900'}>
       <HStack>
         <Text color={'gray.500'}>
-          GitReporter is licensed under the MIT License and developed by {' '}
-          <Link href='https://github.com/gmoqa' isExternal>
-            Guillermo Quinteros
-          </Link>
-          {' '} and GitHub contributors.
-        </Text>
+          GitReporter is licensed under the MIT License.
         <Spacer />
         <HStack mr={12}>
           <Link href='https://github.com/gmoqa/git-reporter' isExternal target={'_blank'}>
