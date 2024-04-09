@@ -8,6 +8,7 @@ export default function Footer() {
       <HStack>
         <Text color={'gray.500'}>
           GitReporter is licensed under the MIT License.
+        </Text>
         <Spacer />
         <HStack mr={12}>
           <Link href='https://github.com/gmoqa/git-reporter' isExternal target={'_blank'}>
