@@ -3,7 +3,7 @@ import MarkdownPreview from '@uiw/react-markdown-preview';
 
 export default function ChangelogPreview({ source }) {
   return (
-    <Box borderWidth="1px" borderRadius="lg" p={4} width="full" mt={8}>
+    <Box borderWidth="1px" borderRadius="lg" p={4} width="full" mt={8} bgColor={'white'}  data-color-mode='light'>
       <MarkdownPreview
         source={source}
         rehypeRewrite={(node, index, parent) => {

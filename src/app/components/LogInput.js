@@ -4,18 +4,23 @@ export default function LogInput({ loading, onLogChange, onProcessClick }) {
   return (
     <VStack spacing={4} width="full">
       <Textarea
-        placeholder="Paste your git log here"
+        bgColor={'gray.200'}
+        placeholder='Paste output here'
         onChange={onLogChange}
         size="lg"
         height="200px"
         disabled={loading}
+        color={'gray.700'}
       />
       <Button
-        colorScheme="blue"
+        colorScheme="yellow"
         onClick={onProcessClick}
         isLoading={loading}
         loadingText="Processing"
-        width="full"
+        width={'100%'}
+        bgColor={'yellow.400'}
+        color={'gray.700'}
+        _hover={{ bgColor: 'yellow.200', color: 'gray.700' }}
       >
         Process
       </Button>

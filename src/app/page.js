@@ -1,13 +1,14 @@
 'use client'
 
 import {
+  Container,
   Flex,
   Heading,
   Text,
   useClipboard,
   VStack,
 } from '@chakra-ui/react'
-// Box, Button, HStack were removed as they are now encapsulated in child components.
+
 import { useState } from 'react'
 import { useReCaptcha } from 'next-recaptcha-v3'
 import ErrorAlert from '@/app/components/alerts/ErrorAlert' // Assumed to be a toast/notification function
@@ -17,9 +18,9 @@ import GitCommandDisplay from '@/app/components/GitCommandDisplay'
 import LogInput from '@/app/components/LogInput'
 import ChangelogPreview from '@/app/components/ChangelogPreview'
 import Footer from '@/app/components/Footer'
-import { processLog, filterLog, getFeatures, getFixes } from '../utils/gitLogParser'
-import { generateMarkdown } from '../utils/markdownGenerator'
-import { GIT_LOG_COMMAND } from '../constants'
+import { processLog, filterLog, getFeatures, getFixes } from './utils/gitLogParser'
+import { generateMarkdown } from './utils/markdownGenerator'
+import { GIT_LOG_COMMAND } from './constants'
 
 export default function Page() {
   // State for the Git log command and clipboard functionality
@@ -165,30 +166,32 @@ export default function Page() {
             </strong>
           </Text>
         </VStack>
-        <VStack pt={6} spacing={4}>
-          <GitCommandDisplay COMMAND={GIT_LOG_COMMAND} onCopy={onCopy} hasCopied={hasCopied} />
-          <Text mt={2} as='i' color={'gray.300'} fontSize={['xs', 'sm']}>
-            Run this command on your proyect folder, and paste the output here
+        <Container maxW='container.xl'>
+          <VStack pt={6} spacing={4}>
+            <GitCommandDisplay COMMAND={GIT_LOG_COMMAND} onCopy={onCopy} hasCopied={hasCopied} />
+            <Text mt={2} as='i' color={'gray.300'} fontSize={['xs', 'sm']}>
+              Run this command on your proyect folder, and paste the output here
+            </Text>
+            <LogInput
+              loading={loading}
+              onLogChange={(e) => setLog(e.target.value)}
+              onProcessClick={handleClickRunButton}
+            />
+          </VStack>
+          <Text mt={2} color={'gray.300'} fontSize={'xs'} textAlign={'center'}>
+            We will never store your data. This tool runs 100% on the client side.
           </Text>
-          <LogInput
-            loading={loading}
-            onLogChange={(e) => setLog(e.target.value)}
-            onProcessClick={handleClickRunButton}
-          />
-        </VStack>
-        <Text mt={1} color={'gray.300'} fontSize={'xs'} textAlign={'center'}>
-          We will never store your data. This tool runs 100% on the client side.
-        </Text>
+        </Container>
 
         {(formattedLog.length > 0 || initialDate || endDate) && (
-          <>
+          <Container maxW='container.xl'>
             <Toolbar
               setInitialDate={setInitialDate}
               setEndDate={setEndDate}
               handleFilterResults={handleClickRunButton} // Toolbar also uses handleClickRunButton for filtering
             />
             <ChangelogPreview source={source} />
-          </>
+          </Container>
         )}
       </Flex>
       <Footer />
