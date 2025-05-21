@@ -1,136 +1,85 @@
 'use client'
 
 import {
-  Box,
-  Button,
   Flex,
   Heading,
-  HStack,
   Text,
-  Textarea,
   useClipboard,
   VStack,
 } from '@chakra-ui/react'
-import { CopyIcon } from '@chakra-ui/icons'
+// Box, Button, HStack were removed as they are now encapsulated in child components.
 import { useState } from 'react'
 import { useReCaptcha } from 'next-recaptcha-v3'
-import ErrorAlert from '@/app/components/alerts/ErrorAlert'
-import MarkdownPreview from '@uiw/react-markdown-preview'
+import ErrorAlert from '@/app/components/alerts/ErrorAlert' // Assumed to be a toast/notification function
 import { sendGTMEvent } from '@next/third-parties/google'
 import Toolbar from '@/app/components/Toolbar'
-import { formatDate } from '@/app/utils/date'
+import GitCommandDisplay from '@/app/components/GitCommandDisplay'
+import LogInput from '@/app/components/LogInput'
+import ChangelogPreview from '@/app/components/ChangelogPreview'
 import Footer from '@/app/components/Footer'
+import { processLog, filterLog, getFeatures, getFixes } from '../utils/gitLogParser'
+import { generateMarkdown } from '../utils/markdownGenerator'
+import { GIT_LOG_COMMAND } from '../constants'
 
 export default function Page() {
-  const COMMAND =
-    'git --no-pager log --all --oneline --pretty=format:"%h %an %ad %s" --date=format-local:"%Y-%m-%d %H:%M:%S"'
-  const { onCopy, hasCopied } = useClipboard(String(COMMAND))
+  // State for the Git log command and clipboard functionality
+  const { onCopy, hasCopied } = useClipboard(String(GIT_LOG_COMMAND))
+
+  // State for the raw pasted Git log input
   const [log, setLog] = useState('')
+  // State for the log after initial processing (parsing into structured objects)
   const [formattedLog, setFormattedLog] = useState([])
+  // State to manage the loading spinner during processing
   const [loading, setLoading] = useState(false)
+  // State for the start date filter
   const [initialDate, setInitialDate] = useState()
+  // State for the end date filter
   const [endDate, setEndDate] = useState()
+
+  // reCAPTCHA hook
   const { executeRecaptcha } = useReCaptcha()
 
-  function returnBaseFilteredLog() {
-    return formattedLog
-      ?.filter((line) => !line.text.startsWith('Merge branch'))
-      ?.filter((line) => !line.text.startsWith('Merged in'))
-      ?.filter((line) => !line.text.startsWith('WIP'))
-      ?.filter((line) => !line.text.startsWith('index'))
-      ?.filter((line) => line.type)
-      ?.filter((line) => line.subject)
-  }
+  // Derived state: Filtered log based on keywords and commit types
+  const filteredLog = filterLog(formattedLog)
+  // Derived state: Extracted features from the filtered log
+  const feats = getFeatures(filteredLog)
+  // Derived state: Extracted fixes from the filtered log
+  const fixes = getFixes(filteredLog)
 
-  const filteredLog = returnBaseFilteredLog()
-  const feats = filteredLog.filter((line) => line.type === 'feat')
-  const fixes = filteredLog.filter((line) => line.type === 'fix')
+  // Derived state: Markdown string generated for preview
+  const source = generateMarkdown(filteredLog, feats, fixes)
 
-  const source = `## Changelog
-  ### Summary
-  **${filteredLog.length}** commits, **${feats.length}** features, **${fixes.length}** fixes
-    
-   
-  ${feats.length > 0 ? '#### Features' : ''}
-  
-  ${feats
-    .map((line) => {
-      return ` - **${line.type}**(${line.scope}): ${line.subject} **[(${line.hash})](#)**  \n`
-    })
-    .join('')}
-
-  ${fixes.length > 0 ? '#### Fixes' : ''}
-  
-  ${fixes
-    .map((line) => {
-      const optionalScope = line.scope ? `(${line.scope})` : ''
-      return ` - **${line.type}**${optionalScope}: ${line.subject} **[(${line.hash})](#)**  \n`
-    })
-    .join('')}
-`
-
-  async function processLog() {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        const scopePattern = /\((.*?)\):/
-        const typePattern = /^([^\(:]+)(?:\([^)]*\))?:/
-        const dateTimePattern = /\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}/
-        const processedLog = log
-          .trim()
-          .split('\n')
-          .map((line) => {
-            const date = line.match(dateTimePattern)?.[0]
-            const dateIndex = line.indexOf(date)
-            const dateLastIndex = dateIndex + date?.length
-            const hash = line.substring(0, 7)
-            const author = line.substring(hash.length + 1, dateIndex - 1)
-            const text = line.substring(dateLastIndex + 1)
-            const scope = text.match(scopePattern)?.[1]
-            const type = text.match(typePattern)?.[1]
-            const subject = text.split(': ')?.[1]
-            return { hash, author, scope, type, date, subject, text }
-          })
-          .filter((log) => {
-            if (!log.date) return false
-
-            let passInitialDate = true
-            let passEndDate = true
-            const logDate = formatDate(log.date)
-
-            if (initialDate) {
-              passInitialDate = logDate >= initialDate
-            }
-
-            if (endDate) {
-              passEndDate = logDate <= endDate
-            }
-
-            return passInitialDate && passEndDate
-          })
-        setFormattedLog(processedLog)
-        resolve()
-      }, 1000)
-    })
-  }
-
-  const handleProcessLoad = () => {
+  /**
+   * Handles the processing of the raw Git log.
+   * It calls the `processLog` utility function and updates the `formattedLog` state.
+   * Manages loading state and displays an error alert if processing fails.
+   */
+  const handleProcessLoad = async () => {
     setLoading(true)
-    processLog()
-      .then(() => setLoading(false))
-      .catch((e) => {
-        console.error(e)
-        setLoading(false)
-        ErrorAlert({
-          title: 'Error',
-          description: 'An error occurred while processing the log',
-        })
+    try {
+      const processedOutput = await processLog(log, initialDate, endDate)
+      setFormattedLog(processedOutput)
+    } catch (error) {
+      console.error("Error processing log:", error)
+      ErrorAlert({
+        title: 'Processing Error',
+        description: 'An error occurred while processing the Git log. Please check the console for details.',
       })
+    } finally {
+      setLoading(false)
+    }
   }
 
+  /**
+   * Validates the reCAPTCHA token with the backend.
+   * @returns {Promise<boolean>} True if reCAPTCHA is valid, false otherwise.
+   */
   const isValidRecaptcha = async () => {
+    // Skip reCAPTCHA in development
     if (process.env.NODE_ENV === 'development') return true
 
-    const token = await executeRecaptcha('validate')
+    // Execute reCAPTCHA to get a token
+    const token = await executeRecaptcha('validate') // 'validate' is the action name
     const response = await fetch('/api/validate', {
       method: 'POST',
       headers: {
@@ -144,18 +93,39 @@ export default function Page() {
     return response?.status === 200
   }
 
+  /**
+   * Handles the click event for the "Process" button.
+   * It validates reCAPTCHA, sends a GTM event, and then calls `handleProcessLoad`.
+   * Manages loading state and displays an error alert if any step fails.
+   */
   const handleClickRunButton = async () => {
+    setLoading(true) // Set loading true at the beginning of the operation
     try {
       const isRealUser = await isValidRecaptcha()
       if (isRealUser) {
         sendGTMEvent({ event: 'buttonClicked', value: 'click' })
-        handleProcessLoad()
+        await handleProcessLoad() // Await completion if it's async, otherwise it's fine
+      } else {
+        // Handle invalid reCAPTCHA case, if user needs to be notified specifically
+        ErrorAlert({
+          title: 'Validation Failed',
+          description: 'reCAPTCHA validation failed. Please try again.',
+        })
+        setLoading(false) // Ensure loading is false if reCAPTCHA fails early
       }
     } catch (error) {
-      console.log(error)
+      console.error("Error during button click processing:", error)
+      ErrorAlert({
+        title: 'Error',
+        description: 'An unexpected error occurred. Please try again.',
+      })
+      setLoading(false) // Ensure loading is reset in case of any error
     }
+    // setLoading(false) is handled by handleProcessLoad's finally block if successful,
+    // or here/above if reCAPTCHA fails or another error occurs.
   }
 
+  // Utility function (could be moved to a utils file if used elsewhere)
   function truncateString(string) {
     const length = 80
     if (string.length > length) {
@@ -196,51 +166,15 @@ export default function Page() {
           </Text>
         </VStack>
         <VStack pt={6} spacing={4}>
-          <VStack spacing={0}>
-            <Box p={4} bgColor={'gray.900'} borderRadius={'lg'}>
-              <HStack>
-                <Text
-                  as='samp'
-                  color={'gray.400'}
-                  fontSize={['xs', 'sm']}
-                  fontWeight={'semibold'}
-                >
-                  {COMMAND}
-                </Text>
-                <Button
-                  size={'sm'}
-                  borderRadius={'md'}
-                  _hover={{ bgColor: 'gray.700' }}
-                  color={'gray.300'}
-                  bgColor={'gray.800'}
-                  leftIcon={<CopyIcon />}
-                  onClick={() => onCopy()}
-                >
-                  {hasCopied ? 'Copied!' : 'Copy'}
-                </Button>
-              </HStack>
-            </Box>
-            <Text mt={2} as='i' color={'gray.300'} fontSize={['xs', 'sm']}>
-              Run this command on your proyect folder, and paste the output here
-            </Text>
-          </VStack>
-          <Textarea
-            rows={6}
-            color={'gray.600'}
-            bgColor={'gray.200'}
-            placeholder='Paste output here'
-            onChange={(e) => setLog(e.target.value)}
+          <GitCommandDisplay COMMAND={GIT_LOG_COMMAND} onCopy={onCopy} hasCopied={hasCopied} />
+          <Text mt={2} as='i' color={'gray.300'} fontSize={['xs', 'sm']}>
+            Run this command on your proyect folder, and paste the output here
+          </Text>
+          <LogInput
+            loading={loading}
+            onLogChange={(e) => setLog(e.target.value)}
+            onProcessClick={handleClickRunButton}
           />
-          <Button
-            isLoading={loading}
-            width={'100%'}
-            bgColor={'yellow.400'}
-            color={'gray.700'}
-            _hover={{ bgColor: 'yellow.200', color: 'gray.700' }}
-            onClick={handleClickRunButton}
-          >
-            Process
-          </Button>
         </VStack>
         <Text mt={1} color={'gray.300'} fontSize={'xs'} textAlign={'center'}>
           We will never store your data. This tool runs 100% on the client side.
@@ -251,28 +185,9 @@ export default function Page() {
             <Toolbar
               setInitialDate={setInitialDate}
               setEndDate={setEndDate}
-              handleFilterResults={handleClickRunButton}
+              handleFilterResults={handleClickRunButton} // Toolbar also uses handleClickRunButton for filtering
             />
-            <Box
-              data-color-mode='light'
-              mt={4}
-              bgColor={'white'}
-              p={4}
-              borderRadius={'md'}
-            >
-              <MarkdownPreview
-                source={source}
-                rehypeRewrite={(node, index, parent) => {
-                  if (
-                    node.tagName === 'a' &&
-                    parent &&
-                    /^h(1|2|3|4|5|6)/.test(parent.tagName)
-                  ) {
-                    parent.children = parent.children.slice(1)
-                  }
-                }}
-              />
-            </Box>
+            <ChangelogPreview source={source} />
           </>
         )}
       </Flex>
