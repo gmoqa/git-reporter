@@ -9,18 +9,48 @@ import {
   RadioGroup,
   Spacer,
   Stack,
+  Menu,
+  MenuButton,
+  MenuList,
+  MenuItem,
+  useToast,
 } from '@chakra-ui/react'
-import { CalendarIcon } from '@chakra-ui/icons'
+import { CalendarIcon, ChevronDownIcon } from '@chakra-ui/icons'
 import { useState } from 'react'
 import { FaFilter } from 'react-icons/fa'
 import { formatDate } from '@/app/utils/date'
+import { formatMarkdown } from '@/app/utils/markdownGenerator'
 
 export default function Toolbar({
   setInitialDate,
   setEndDate,
   handleFilterResults,
+  markdownSource,
 }) {
   const [filter, setFilter] = useState(null)
+  const toast = useToast()
+
+  const handleCopy = async (format) => {
+    try {
+      const formattedText = formatMarkdown(markdownSource, format)
+      await navigator.clipboard.writeText(formattedText)
+      toast({
+        title: 'Copied to clipboard!',
+        status: 'success',
+        duration: 2000,
+        isClosable: true,
+      })
+    } catch (err) {
+      console.error('Failed to copy: ', err)
+      toast({
+        title: 'Failed to copy',
+        description: 'Could not copy text to clipboard.',
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+      })
+    }
+  }
 
   const updateFilter = (newFilter) => {
     const today = new Date()
@@ -110,6 +140,25 @@ export default function Toolbar({
         >
           Filter
         </Button>
+        <Menu>
+          <MenuButton
+            as={Button}
+            size={'sm'}
+            borderRadius={'md'}
+            bgColor={'yellow.400'}
+            color={'gray.700'}
+            _hover={{ bgColor: 'yellow.200', color: 'gray.700' }}
+            rightIcon={<ChevronDownIcon />}
+          >
+            Copy
+          </MenuButton>
+          <MenuList>
+            <MenuItem onClick={() => handleCopy('SLACK')}>Slack</MenuItem>
+            <MenuItem onClick={() => handleCopy('MEET')}>Meet</MenuItem>
+            <MenuItem onClick={() => handleCopy('MARKDOWN')}>Markdown</MenuItem>
+            <MenuItem onClick={() => handleCopy('TXT')}>Plain Text</MenuItem>
+          </MenuList>
+        </Menu>
       </HStack>
     </Box>
   )

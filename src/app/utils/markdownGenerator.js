@@ -1,36 +1,29 @@
-export function generateMarkdown(filteredLog, feats, fixes) {
-  if (!filteredLog || !feats || !fixes) {
-    return "## Changelog\n### Summary\nNo commits to display.";
+export const formatMarkdown = (markdownText, format) => {
+  if (!markdownText) {
+    return "";
   }
 
-  const summary = `**${filteredLog.length}** commits, **${feats.length}** features, **${fixes.length}** fixes`;
+  if (format === "MARKDOWN") {
+    return markdownText;
+  }
 
-  const featuresSection = feats.length > 0 ? '#### Features' : '';
-  const featuresList = feats
-    .map((line) => {
-      return ` - **${line.type}**(${line.scope}): ${line.subject} **[(${line.hash})](#)**  \n`;
-    })
-    .join('');
+  if (format === "TXT" || format === "MEET") {
+    // Strip headings, bold, links, and lists
+    let text = markdownText
+      .replace(/^(##|###|####)\s+/gm, "") // Remove headings
+      .replace(/\*\*(.*?)\*\*/g, "$1") // Remove bold
+      .replace(/\[(.*?)\]\((.*?)\)/g, "$1") // Remove links, keeping the text
+      .replace(/^-\s+/gm, ""); // Remove list markers
+    return text;
+  }
 
-  const fixesSection = fixes.length > 0 ? '#### Fixes' : '';
-  const fixesList = fixes
-    .map((line) => {
-      const optionalScope = line.scope ? `(${line.scope})` : '';
-      return ` - **${line.type}**${optionalScope}: ${line.subject} **[(${line.hash})](#)**  \n`;
-    })
-    .join('');
+  if (format === "SLACK") {
+    // Transform links to Slack format
+    // Preserve other markdown like bold and lists as Slack supports them
+    let text = markdownText.replace(/\[(.*?)\]\((.*?)\)/g, "<$2|$1>");
+    return text;
+  }
 
-  return `## Changelog
-### Summary
-${summary}
-  
- 
-${featuresSection}
-  
-${featuresList}
-
-${fixesSection}
-  
-${fixesList}
-`;
-}
+  // Default to returning original text if format is unknown or not specified
+  return markdownText;
+};

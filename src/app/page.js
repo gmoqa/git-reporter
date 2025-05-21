@@ -189,6 +189,7 @@ export default function Page() {
               setInitialDate={setInitialDate}
               setEndDate={setEndDate}
               handleFilterResults={handleClickRunButton} // Toolbar also uses handleClickRunButton for filtering
+              markdownSource={source}
             />
             <ChangelogPreview source={source} />
           </Container>
