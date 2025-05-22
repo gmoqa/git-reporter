@@ -1,4 +1,4 @@
-import { createStandaloneToast } from '@chakra-ui/react'
+import { createStandaloneToast } from '@chakra-ui/toast'
 
 export default function ErrorAlert({ title, description }) {
   const { toast } = createStandaloneToast()

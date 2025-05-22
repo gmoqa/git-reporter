@@ -1,5 +1,5 @@
 import { Box, HStack, Text, Button } from '@chakra-ui/react';
-import { CopyIcon } from '@chakra-ui/icons';
+import { FaCopy } from 'react-icons/fa';
 
 export default function GitCommandDisplay({ COMMAND, onCopy, hasCopied }) {
   return (
@@ -8,7 +8,7 @@ export default function GitCommandDisplay({ COMMAND, onCopy, hasCopied }) {
         <Text fontFamily="monospace" fontSize="sm">
           {COMMAND}
         </Text>
-        <Button onClick={onCopy} size="sm" leftIcon={<CopyIcon />}>
+        <Button onClick={onCopy} size="sm" leftIcon={<FaCopy />}>
           {hasCopied ? 'Copied' : 'Copy'}
         </Button>
       </HStack>

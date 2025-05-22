@@ -5,14 +5,13 @@ import {
   Button,
   HStack,
   Input,
-  Radio,
+  // Radio, // Radio is now part of RadioGroup
   RadioGroup,
   Spacer,
   Stack,
 } from '@chakra-ui/react'
-import { CalendarIcon } from '@chakra-ui/icons'
 import { useState } from 'react'
-import { FaFilter } from 'react-icons/fa'
+import { FaCalendarAlt, FaFilter } from 'react-icons/fa'
 import { formatDate } from '@/app/utils/date'
 
 export default function Toolbar({
@@ -58,22 +57,36 @@ export default function Toolbar({
   return (
     <Box bgColor={'gray.600'} py={2} px={4} borderRadius={'lg'} mt={2}>
       <HStack>
-        <CalendarIcon color={'gray.400'} mr={2} />
-        <RadioGroup
+        <FaCalendarAlt color={'gray.400'} style={{ marginRight: '0.5rem' }} />
+        <RadioGroup.Root
           mt={1}
-          onChange={updateFilter}
+          onValueChange={(details) => updateFilter(details.value)}
           value={filter}
-          color={'gray.300'}
-          fontWeight={'medium'}
-          colorScheme={'yellow'}
+          colorPalette={'yellow'}
         >
-          <Stack direction='row'>
-            <Radio value='WEEK'>Week</Radio>
-            <Radio value='2_WEEKS'>2 Weeks</Radio>
-            <Radio value='MONTH'>Month </Radio>
-            <Radio value='CUSTOM'>Custom</Radio>
+          <Stack direction='row' color={'gray.300'} fontWeight={'medium'}>
+            <RadioGroup.Item value='WEEK'>
+              <RadioGroup.ItemHiddenInput />
+              <RadioGroup.ItemIndicator />
+              <RadioGroup.ItemText>Week</RadioGroup.ItemText>
+            </RadioGroup.Item>
+            <RadioGroup.Item value='2_WEEKS'>
+              <RadioGroup.ItemHiddenInput />
+              <RadioGroup.ItemIndicator />
+              <RadioGroup.ItemText>2 Weeks</RadioGroup.ItemText>
+            </RadioGroup.Item>
+            <RadioGroup.Item value='MONTH'>
+              <RadioGroup.ItemHiddenInput />
+              <RadioGroup.ItemIndicator />
+              <RadioGroup.ItemText>Month </RadioGroup.ItemText>
+            </RadioGroup.Item>
+            <RadioGroup.Item value='CUSTOM'>
+              <RadioGroup.ItemHiddenInput />
+              <RadioGroup.ItemIndicator />
+              <RadioGroup.ItemText>Custom</RadioGroup.ItemText>
+            </RadioGroup.Item>
           </Stack>
-        </RadioGroup>
+        </RadioGroup.Root>
         {filter === 'CUSTOM' && (
           <HStack>
             <Input
